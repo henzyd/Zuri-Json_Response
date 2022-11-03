@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from .models import EnumModel
+
 
 
 ENUM = (
@@ -6,7 +8,7 @@ ENUM = (
     (1, 'substraction'),
     (2, 'multiplication'),
 )
-class EnumSerializer(serializers.Serializer):
-    operation_type = serializers.CharField(default=0, max_length=20)
-    x = serializers.IntegerField()
-    y = serializers.IntegerField()
+class EnumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnumModel
+        fields = '__all__'

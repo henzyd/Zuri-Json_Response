@@ -4,6 +4,8 @@ from rest_framework.decorators import api_view
 from .serializers import EnumSerializer
 from rest_framework.response import Response
 from rest_framework import status
+# import requests
+# import json
 # Create your views here.
 
 '''
@@ -38,8 +40,12 @@ def json_enum_view(request):
         serializer = EnumSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         operation = str(serializer.validated_data['operation_type'].strip().lower())
-        x = int(serializer.validated_data['x'])
-        y = int(serializer.validated_data['y'])
+        print(operation == 'addition')
+        try:
+            x = int(serializer.validated_data['x'])
+            y = int(serializer.validated_data['y'])
+        except:
+            Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         result = 0
         if operation == 'addition':
             result += x + y
@@ -47,8 +53,8 @@ def json_enum_view(request):
             result += x - y
         elif operation == 'multiplication':
             result += x * y
-        # else:
-        #     raise ValueError('this is not what was requested')
+        else:
+            return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         print(serializer.validated_data['operation_type'])
         data = {}
         data['slackUsername'] = 'henzyd'
@@ -57,3 +63,36 @@ def json_enum_view(request):
         print(data)
         return Response(data=data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# @api_view(['POST'])
+# def json_enum_view(request):
+#     '''
+#         { “operation_type”: Enum <addition | subtraction | multiplication> , “x”: Integer, “y”: Integer }
+#     '''
+#     if request.method == 'POST':
+#         # url = "https://get-api23.herokuapp.com/enum/"
+#         # data = {'sender': 'Alice', 'receiver': 'Bob', 'message': 'We did it!'}
+#         serializer = EnumSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         # data = {serializer.data}
+#         # headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+#         # r = requests.post(url, data=json.dumps(data), headers=headers)
+#         operation = str(serializer.validated_data['operation_type'].strip().lower())
+#         x = int(serializer.validated_data['x'])
+#         y = int(serializer.validated_data['y'])
+#         result = 0
+#         if operation == 'addition':
+#             result += x + y
+#         elif operation == 'subtraction':
+#             result += x - y
+#         elif operation == 'multiplication':
+#             result += x * y
+#         data = {}
+#         data['slackUsername'] = 'henzyd'
+#         data['result'] = result
+#         data['operation_type'] = operation
+#         return JsonResponse(data=data)
+
+#     return Response(status=status.HTTP_400_BAD_REQUEST)
