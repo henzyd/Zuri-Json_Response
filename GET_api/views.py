@@ -53,7 +53,7 @@ def json_enum_view(request):
         data = {}
         data['slackUsername'] = 'henzyd'
         data['result'] = result
-        # data['']
+        data['operation_type'] = operation
         print(data)
-        return Response(data=data)
+        return Response(data=data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
