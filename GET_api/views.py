@@ -47,8 +47,8 @@ def json_enum_view(request):
             result += x - y
         elif operation == 'multiplication':
             result += x * y
-        else:
-            raise ValueError('this is not what was requested')
+        # else:
+        #     raise ValueError('this is not what was requested')
         print(serializer.validated_data['operation_type'])
         data = {}
         data['slackUsername'] = 'henzyd'
