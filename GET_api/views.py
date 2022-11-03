@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from .serializers import EnumSerializer
 from rest_framework.response import Response
 from rest_framework import status
+import numpy as np
 # import requests
 # import json
 # Create your views here.
@@ -39,28 +40,59 @@ def json_enum_view(request):
     if request.method == 'POST':
         serializer = EnumSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        operation = str(serializer.validated_data['operation_type'].strip().lower())
-        print(operation == 'addition')
+        operation_type = serializer.validated_data['operation_type']
+        operation = str(operation_type.strip().lower())
+
         try:
             x = int(serializer.validated_data['x'])
             y = int(serializer.validated_data['y'])
         except:
-            Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         result = 0
         if operation == 'addition':
             result += x + y
-        elif operation == 'subtraction':
+        if operation == 'subtraction':
             result += x - y
-        elif operation == 'multiplication':
+        if operation == 'multiplication':
             result += x * y
-        else:
-            return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        print(serializer.validated_data['operation_type'])
+        if operation:
+            list_operation = operation.split()
+            x = 0
+            y = 0
+            opera = ''
+            new_l = []
+
+            for i, item in enumerate(list_operation):
+                if item.isdigit():
+                    new_l.append(int(list_operation[i]))
+                else:
+                    try:
+                        uche = int(item)
+                    except:
+                        uche = None
+                    if uche is not None:
+                        new_l.append(int(list_operation[i]))
+                    else:
+                        continue
+                    ### NOTE make it possible to add multiple number
+
+            if len(new_l) == 2 :
+                def test(*args):
+                    if 'add' in list_operation:
+                        return sum(tuple(args))
+                    elif 'subtract' in list_operation:
+                        return np.subtract(*args)
+                    elif 'multiply' in list_operation:
+                        return np.multiply(*args)
+
+                result += test(*new_l)
+            else:
+                return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         data = {}
         data['slackUsername'] = 'henzyd'
         data['result'] = result
         data['operation_type'] = operation
-        print(data)
+        # print(data)
         return Response(data=data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
