@@ -17,7 +17,18 @@ from django.contrib import admin
 from django.urls import path
 from GET_api import views
 
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns #### Static files
+
+######### Media files
+from django.conf.urls.static import static
+from django.conf import settings
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.json_res_view, name='json_res'),
+    path('enum/', views.json_enum_view, name='json_enum'),
 ]
+
+urlpatterns += staticfiles_urlpatterns()  ## NOTE this will check if we are in debug mode if we are it will append to urlpatterns so that it will know how to serve our static files
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    

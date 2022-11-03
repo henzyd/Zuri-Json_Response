@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    ## Installed App
+    'rest_framework',
+    'rest_framework_simplejwt',
+
     ## My app
     'GET_api.apps.GetApiConfig',
 ]
@@ -134,6 +138,9 @@ AUTH_USER_MODEL = 'GET_api.CustomUser'
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') ### NOTE
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'my_app/static')  #### BASE_DIR / 'static'
+# ]
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), ) ### NOTE
 
 django_on_heroku.settings(locals()) ### NOTE
