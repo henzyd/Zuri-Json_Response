@@ -51,11 +51,11 @@ def json_enum_view(request):
         result = 0
         if operation == 'addition':
             result += x + y
-        if operation == 'subtraction':
+        elif operation == 'subtraction':
             result += x - y
-        if operation == 'multiplication':
+        elif operation == 'multiplication':
             result += x * y
-        if operation:
+        elif operation:
             list_operation = operation.split()
             x = 0
             y = 0
